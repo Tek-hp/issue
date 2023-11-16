@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:issue/foc/cubit/focus_cubit_cubit.dart';
 import 'package:issue/my_home_page.dart';
 
 import 'bloc/list_bloc.dart';
@@ -13,8 +14,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ListBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ListBloc>(create: (_) => ListBloc()),
+        BlocProvider<FocusIndexCubit>(create: (_) => FocusIndexCubit()),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
