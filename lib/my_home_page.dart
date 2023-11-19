@@ -94,9 +94,9 @@ class _AppOptionWidgetState extends State<AppOptionWidget> {
                   ),
                 AddOptionButton(
                   onTap: () {
-                    context
-                        .read<FocusIndexCubit>()
-                        .changeFocus(data.multiFields!.length + 1);
+                    // context
+                    //     .read<FocusIndexCubit>()
+                    //     .changeFocus(data.multiFields!.length + 1);
                     BlocProvider.of<ListBloc>(context).add(
                       UpdateListEvent(
                         multiFields: [...data.multiFields!, ''],

@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ListBloc>(create: (_) => ListBloc()),
-        BlocProvider<FocusIndexCubit>(create: (_) => FocusIndexCubit()),
+        // BlocProvider<FocusIndexCubit>(create: (_) => FocusIndexCubit()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
