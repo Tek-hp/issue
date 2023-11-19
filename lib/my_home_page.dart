@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:issue/foc/cubit/focus_cubit_cubit.dart';
 import 'package:issue/model.dart';
+import 'package:issue/widgets/add_button.dart';
+import 'package:issue/widgets/option.dart';
 
 import 'bloc/list_bloc.dart';
 
@@ -94,9 +96,6 @@ class _AppOptionWidgetState extends State<AppOptionWidget> {
                   ),
                 AddOptionButton(
                   onTap: () {
-                    // context
-                    //     .read<FocusIndexCubit>()
-                    //     .changeFocus(data.multiFields!.length + 1);
                     BlocProvider.of<ListBloc>(context).add(
                       UpdateListEvent(
                         multiFields: [...data.multiFields!, ''],
@@ -109,165 +108,6 @@ class _AppOptionWidgetState extends State<AppOptionWidget> {
           ),
         );
       },
-    );
-  }
-}
-
-class OptionWidget extends StatefulWidget {
-  const OptionWidget({
-    required this.initialText,
-    required this.isFocused,
-    required this.index,
-    this.onDelete,
-    this.onEditingComplete,
-    this.selectThisOption,
-    this.hint,
-    this.isSelected = false,
-    this.canDelete = true,
-    super.key,
-  });
-
-  final VoidCallback? onDelete;
-  final void Function(String)? onEditingComplete;
-  final void Function(String)? selectThisOption;
-  final bool isFocused;
-  final int index;
-
-  final String? hint;
-  final String initialText;
-  final bool isSelected;
-  final bool canDelete;
-
-  @override
-  State<OptionWidget> createState() => _OptionWidgetState();
-}
-
-class _OptionWidgetState extends State<OptionWidget> {
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    _controller = TextEditingController(text: widget.initialText);
-
-    context.read<FocusIndexCubit>().changeFocus(widget.index);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final hasFocus = context.watch<FocusIndexCubit>().isFocused(widget.index);
-    return BlocBuilder<FocusIndexCubit, int?>(
-      builder: (context, state) {
-        return GestureDetector(
-          onTap: () {
-            widget.selectThisOption?.call(_controller.text);
-          },
-          onDoubleTap: () {
-            if (!hasFocus) {
-              context.read<FocusIndexCubit>().changeFocus(widget.index);
-            }
-          },
-          child: SizedBox(
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  constraints: const BoxConstraints(
-                    minHeight: 37,
-                    maxWidth: 148,
-                    minWidth: 148,
-                  ),
-                  decoration: BoxDecoration(
-                    color: widget.isSelected
-                        ? Colors.green.withOpacity(
-                            0.3,
-                          )
-                        : ThemeData().canvasColor,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(),
-                  ),
-                  child: !hasFocus
-                      ? Center(child: Text(_controller.text))
-                      : TextField(
-                          controller: _controller,
-                          autofocus: true,
-                          decoration: InputDecoration(hintText: widget.hint),
-                          onEditingComplete: () {
-                            // if (widget.onEditingComplete != null) {
-                            //   canEditField = false;
-                            // }
-                            widget.onEditingComplete?.call(_controller.text);
-                          },
-                        ),
-                ),
-                if (widget.canDelete)
-                  Positioned(
-                    right: -5,
-                    top: -5,
-                    child: InkWell(
-                      onTap: widget.onDelete,
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xffCFD5E2),
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.close,
-                            size: 15,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class AddOptionButton extends StatelessWidget {
-  const AddOptionButton({required this.onTap, super.key});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 38,
-        width: 148,
-        padding: const EdgeInsets.only(left: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            Container(
-              height: 16,
-              width: 16,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: const Icon(
-                Icons.add_rounded,
-                size: 12,
-              ),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            const Text('Add'),
-          ],
-        ),
-      ),
     );
   }
 }
